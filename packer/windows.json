@@ -1,0 +1,68 @@
+{
+  "variables": {
+    "unattend_dir": "C:\\UnattendResources"
+  },
+  "builders": [
+    {
+      "name": "win2016",
+      "domain_name": "Default",
+      "flavor": "w1.small",
+      "identity_endpoint": "https://ops.elastx.net:5000/v3",
+      "image_name": "windows-server-2016-desktop-{{isotime \"20060102\"}}",
+      "insecure": "true",
+      "region": "regionOne",
+      "source_image": "73f202ef-1742-4a87-b878-12c3e2c0ea7d",
+      "type": "openstack",
+      "networks": ["NETWORK_ID"],
+      "floating_ip_pool": "ext-net-01",
+      "security_groups": ["workshop-winrm-provider"],
+      "communicator": "winrm",
+      "winrm_username": "Admin",
+      "winrm_use_ssl": "true",
+      "winrm_timeout": "2h",
+      "winrm_insecure": "true"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": "New-Item {{user `unattend_dir`}} -Type directory"
+    },
+    {
+      "type": "file",
+      "source": "PSWindowsUpdate.zip",
+      "destination": "{{user `unattend_dir`}}\\PSWindowsUpdate.zip"
+    },
+    {
+      "type": "file",
+      "source": "windows-update.ps1",
+      "destination": "{{user `unattend_dir`}}\\windows-update.ps1"
+    },
+    {
+      "type": "powershell",
+      "environment_vars": [
+        "UNATTEND_DIR={{user `unattend_dir`}}"
+      ],
+      "script": "install-pswu.ps1"
+    },
+    {
+      "type": "windows-restart",
+      "restart_check_command": "powershell -Command \"& { while (!(Test-Path {{user `unattend_dir`}}\\done.txt)) { Write-Output 'Waiting for Windows updates to finish'; Start-Sleep 300 } Write-Output 'Finished installing Windows updates'}\"",
+      "restart_timeout": "8h"
+    },
+    {
+      "type": "powershell",
+      "environment_vars": [
+        "UNATTEND_DIR={{user `unattend_dir`}}"
+      ],
+      "script": "prepare-machine.ps1"
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "manifest.json",
+      "type": "manifest"
+    }
+  ]
+}
+
