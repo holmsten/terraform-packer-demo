@@ -22,6 +22,6 @@ export TF_VAR_os_password=$OS_PASSWORD_INPUT
 export OS_AUTH_URL="https://ops.elastx.net:5000/v2.0"
 export TF_VAR_auth_url="$OS_AUTH_URL"
 
-export TF_VAR_private_key_path="~/workshop/workshop"
-export TF_VAR_public_key_path="~/workshop/workshop.pub"
+export TF_VAR_private_key_path="~/terraform-packer-demo/workshop"
+export TF_VAR_public_key_path="~/terraform-packer-demo/workshop.pub"
 

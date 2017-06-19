@@ -1,7 +1,7 @@
 ### [Server] ###
 
 variable "count" { default = 1 }
-variable "private_key_path" { default = "~/workshop/workshop" }
+variable "private_key_path" { default = "~/terraform-packer-demo/workshop" }
 variable "windows_password" { default = "MyTempPasswd!23"}
 
 variable "linux_user_data" {
