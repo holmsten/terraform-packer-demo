@@ -2,6 +2,7 @@
 Prereqs:
 - `source openrc.sh` so Terraform/Packer can communicate with OpenStack.
 - Create `terraform` directory in Swift if you want to use it as a backend for terraform state. Otherwise remove `terraform {}` block in `terraform/variables.tf`.
+- Replace `TF_VAR_private_key_path` inside `openrc.sh` with working directory.
 
 ## Terraform
 `cd terraform; terraform apply`
